@@ -3,7 +3,12 @@ from phi.tools.duckduckgo import DuckDuckGo
 from phi.tools.yfinance import YFinanceTools
 
 AI_MODELS = {
-    "openai-gpt-4o": OpenAIChat(id="gpt-4o")
+    "openai-gpt-4o": {
+        "model":OpenAIChat,
+        "options":{
+            "id":"gpt-4o"
+        }
+    }
 }
 
 AI_TOOLS  = {

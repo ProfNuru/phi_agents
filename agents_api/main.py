@@ -146,33 +146,67 @@ async def prompt_agent(agent_id:int, data:AgentPrompt, db:Session=Depends(get_db
     for instr in  agent.instructions:
         agent_instructions.append(instr.text)
 
-    agent_instance = PhiAgent(
-        name=agent.name,
-        model=AI_MODELS[agent.model],
-        tools=agent_tools,
-        instructions=agent_instructions,
-        show_tool_calls=agent.show_tool_calls,
-        markdown=agent.markdown,
-    )
-    db_user_prompt = Conversation(
-        author='user',
-        prompt=data.prompt,
-        agent_id=agent.id
-    )
-    db.add(db_user_prompt)
-    db.commit()
-    # agent_instance.print_response(data.prompt, stream=True)
-    response = agent_instance.run(data.prompt)
-    db_assistant_prompt = Conversation(
-        author='assistant',
-        prompt=response.content,
-        agent_id=agent.id
-    )
-    db.add(db_assistant_prompt)
-    db.commit()
-    return {
-        "response":response.content
-    }
+    # model_instance = None
+    if agent.model in AI_MODELS:
+        model = AI_MODELS[agent.model]["model"]
+        if AI_MODELS[agent.model]["options"] is None:
+            agent_instance = PhiAgent(
+                name=agent.name,
+                model=model(),
+                tools=agent_tools,
+                instructions=agent_instructions,
+                show_tool_calls=agent.show_tool_calls,
+                markdown=agent.markdown,
+            )
+            db_user_prompt = Conversation(
+                author='user',
+                prompt=data.prompt,
+                agent_id=agent.id
+            )
+            db.add(db_user_prompt)
+            db.commit()
+            # agent_instance.print_response(data.prompt, stream=True)
+            response = agent_instance.run(data.prompt)
+            db_assistant_prompt = Conversation(
+                author='assistant',
+                prompt=response.content,
+                agent_id=agent.id
+            )
+            db.add(db_assistant_prompt)
+            db.commit()
+            return {
+                "response":response.content
+            }
+        else:
+            kwargs = AI_MODELS[agent.model]["options"]
+            agent_instance = PhiAgent(
+                name=agent.name,
+                model=model(**kwargs, api_key=agent.api_key),
+                tools=agent_tools,
+                instructions=agent_instructions,
+                show_tool_calls=agent.show_tool_calls,
+                markdown=agent.markdown,
+            )
+            db_user_prompt = Conversation(
+                author='user',
+                prompt=data.prompt,
+                agent_id=agent.id
+            )
+            db.add(db_user_prompt)
+            db.commit()
+            # agent_instance.print_response(data.prompt, stream=True)
+            response = agent_instance.run(data.prompt)
+            db_assistant_prompt = Conversation(
+                author='assistant',
+                prompt=response.content,
+                agent_id=agent.id
+            )
+            db.add(db_assistant_prompt)
+            db.commit()
+            return {
+                "response":response.content
+            }
+
 
 
 @app.get("/api/v1/prompt/{agent_id}/")
