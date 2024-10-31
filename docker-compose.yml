@@ -1,0 +1,25 @@
+version: '3'
+services:
+  backend:
+    container_name: backend
+    build:
+      context: ./agents_api
+    ports:
+      - "8000:8000"
+    networks:
+      - backend_network
+
+  frontend:
+    container_name: frontend
+    build: ./agents_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - frontend_network
+
+networks:
+  frontend_network:
+  backend_network:
+    driver: bridge

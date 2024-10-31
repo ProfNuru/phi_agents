@@ -10,7 +10,6 @@ import { MultiSelect } from '@/components/ui/multi-select';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Agent } from '@/lib/types'
 import { PlusIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import React, { useState, useTransition } from 'react'
 import { toast } from 'sonner';
 

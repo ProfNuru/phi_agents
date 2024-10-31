@@ -34,6 +34,7 @@ export const login = async (values:{
     email:string;
     password:string;
 }) => {
+    console.log({BASE_ROUTE:process.env.BASE_API_ROUTE});
     const url = `${process.env.BASE_API_ROUTE}/login`;
     try {
         const response = await axios.post(
@@ -58,7 +59,7 @@ export const login = async (values:{
     } catch (error) {
         console.error("Something went wrong:", {error});
         if(axios.isAxiosError(error)){
-            return {error: error.response?.data.detail}
+            return {error: error.response?.data.detail || "Network error"}
         }
         return {error:"Something went wrong"}
     }
