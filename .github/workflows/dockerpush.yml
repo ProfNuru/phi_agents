@@ -35,6 +35,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
   push_to_frontend:
     name: Push Frontend image to Docker Hub
+    needs: push_to_backend
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -61,3 +62,17 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  update_docker_image_on_linode:
+    name: Rebuild docker image on linode and run
+    needs: push_to_frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.LINODE_HOST }}
+          username: ${{ secrets.LINODE_USERNAME }}
+          password: ${{ secrets.LINODE_PASSWORD }}
+          port: ${{ secrets.LINODE_PORT }}
+          script: bash update.sh
