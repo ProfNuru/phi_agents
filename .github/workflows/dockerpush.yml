@@ -3,7 +3,7 @@ name: Publish Docker image
 on:
   push:
     branches:
-        - deploy
+        - main
 jobs:
   push_to_backend:
     name: Push Backend image to Docker Hub
