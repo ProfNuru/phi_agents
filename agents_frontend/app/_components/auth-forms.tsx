@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import LoginForm from "./login-form"
 import RegisterForm from "./register-form"
 import { Button } from "@/components/ui/button"
@@ -11,10 +11,6 @@ const AuthForms = () => {
     const switchAuthType = (authType:"login"|"register") => {
         setAuthType(authType);
     }
-
-    useEffect(()=>{
-        console.log({ROUTE:window.location});
-    },[]);
 
   return (
     <div className="flex flex-col">
