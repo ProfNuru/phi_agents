@@ -12,6 +12,8 @@ const AuthForms = () => {
         setAuthType(authType);
     }
 
+    console.log({ROUTE:window.location});
+
   return (
     <div className="flex flex-col">
         <div className="flex w-full">
